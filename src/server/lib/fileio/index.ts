@@ -1,34 +1,14 @@
 <<<<<<< HEAD
-import { writeFile, readFile, rename } from 'node:fs/promises'
+import { readFile, writeFile, rename, mkdir } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, dirname } from 'node:path'
 import { randomBytes } from 'node:crypto'
+import yaml from 'js-yaml'
 
-export { parseMarkdownYamlBlock, injectMarkdownYamlBlock, BlockNotFoundError, AGENTS_GLOBAL_SETTINGS_HEADING } from './markdownYaml.js'
-
-/**
- * Writes content atomically: write to tmp file, then rename over target.
- * On EXDEV (cross-device rename), falls back to copy+unlink.
- */
-export async function writeAtomic(filePath: string, content: string): Promise<void> {
-  const tmp = join(tmpdir(), `atomic-${randomBytes(8).toString('hex')}.tmp`)
-  await writeFile(tmp, content, 'utf8')
-  try {
-    await rename(tmp, filePath)
-  } catch (err: unknown) {
-    if ((err as NodeJS.ErrnoException).code === 'EXDEV') {
-      await writeFile(filePath, content, 'utf8')
-      const { unlink } = await import('node:fs/promises')
-      await unlink(tmp).catch(() => {})
-    } else {
-      throw err
-    }
-  }
-}
-
-export async function readFileContent(filePath: string): Promise<string> {
-  return readFile(filePath, 'utf8')
-}
+export class FileNotFoundError extends Error {
+  constructor(path: string) {
+    super(`File not found: ${path}`)
+    this.name = 'FileNotFoundError'
 =======
 import fs from 'node:fs/promises';
 import os from 'node:os';
@@ -40,10 +20,16 @@ export class FileNotFoundError extends Error {
   constructor(filePath: string) {
     super(`File not found: ${filePath}`);
     this.name = 'FileNotFoundError';
+>>>>>>> origin/main
   }
 }
 
 export class YamlParseError extends Error {
+<<<<<<< HEAD
+  constructor(message: string) {
+    super(message)
+    this.name = 'YamlParseError'
+=======
   constructor(filePath: string, cause: unknown) {
     super(`YAML parse error in ${filePath}: ${cause}`);
     this.name = 'YamlParseError';
@@ -76,10 +62,37 @@ async function fileExists(filePath: string): Promise<boolean> {
   } catch {
     return false;
 >>>>>>> origin/main
+>>>>>>> origin/main
   }
 }
 
 export async function writeAtomic(filePath: string, content: string): Promise<void> {
+<<<<<<< HEAD
+  await mkdir(dirname(filePath), { recursive: true })
+  const tmp = join(tmpdir(), `stark-${randomBytes(8).toString('hex')}.tmp`)
+  try {
+    await writeFile(tmp, content, 'utf8')
+    await rename(tmp, filePath)
+  } catch (err) {
+    // EXDEV: cross-device rename — fall back to copy+delete
+    const { copyFile, unlink } = await import('node:fs/promises')
+    await copyFile(tmp, filePath)
+    await unlink(tmp).catch(() => undefined)
+  }
+}
+
+export async function readYaml<T = unknown>(filePath: string): Promise<T> {
+  let raw: string
+  try {
+    raw = await readFile(filePath, 'utf8')
+  } catch {
+    throw new FileNotFoundError(filePath)
+  }
+  try {
+    return yaml.load(raw) as T
+  } catch (err) {
+    throw new YamlParseError(String(err))
+=======
   const dir = path.dirname(filePath);
 <<<<<<< HEAD
   const tmp = path.join(os.tmpdir(), `stark-${Date.now()}-${Math.random().toString(36).slice(2)}.tmp`);
@@ -172,10 +185,22 @@ export async function readYaml<T = unknown>(filePath: string): Promise<T> {
     return yaml.load(raw) as T;
   } catch (err) {
     throw new YamlParseError(filePath, err);
+>>>>>>> origin/main
   }
 }
 
 export async function writeYaml(filePath: string, data: unknown): Promise<void> {
+<<<<<<< HEAD
+  const content = yaml.dump(data, { lineWidth: 120, noRefs: true })
+  await writeAtomic(filePath, content)
+}
+
+export function maskSecret(value: string): string {
+  if (!value) return ''
+  if (value.length <= 4) return '•'.repeat(value.length)
+  return value.slice(0, 4) + '•'.repeat(value.length - 4)
+}
+=======
 <<<<<<< HEAD
   const content = yaml.dump(data, { lineWidth: 120 });
 =======
