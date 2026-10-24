@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { CredentialField } from '../components/CredentialField.js'
@@ -168,13 +167,4 @@ export default function CredentialsPage() {
       </form>
     </div>
   )
-=======
-export function CredentialsPage() {
-  return (
-    <div>
-      <h2 className="text-2xl font-semibold text-gray-900">Credentials</h2>
-      <p className="mt-2 text-gray-500">Coming soon</p>
-    </div>
-  );
->>>>>>> origin/main
 }

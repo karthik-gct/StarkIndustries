@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import LimitSlider from '../components/LimitSlider.js'
@@ -132,13 +131,4 @@ export default function AgentLimitsPage() {
       </button>
     </div>
   )
-=======
-export function AgentLimitsPage() {
-  return (
-    <div>
-      <h2 className="text-2xl font-semibold text-gray-900">Agent Limits</h2>
-      <p className="mt-2 text-gray-500">Coming soon</p>
-    </div>
-  );
->>>>>>> origin/main
 }

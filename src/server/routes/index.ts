@@ -1,27 +1,18 @@
-<<<<<<< HEAD
-import { Router } from 'express'
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
-import { join, dirname } from 'node:path'
-import mcpConfigRouter from './config/mcpConfig.js'
-
-export const apiRouter = Router()
-
-const pkgPath = join(dirname(fileURLToPath(import.meta.url)), '../../../package.json')
-const { version } = JSON.parse(readFileSync(pkgPath, 'utf-8')) as { version: string }
-
-apiRouter.get('/health', (_req, res) => {
-  res.json({ status: 'ok', version })
-})
-
-apiRouter.use('/config/mcp', mcpConfigRouter)
-=======
 import { Router } from 'express';
+import { healthRouter } from './health.js';
+import credentialsRouter from './config/credentials.js';
 import modelsRouter from './config/models.js';
+import agentsRouter from './config/agents.js';
+import projectsRouter from './config/projects.js';
+import { createMcpConfigRouter } from './config/mcpConfig.js';
 
 const router = Router();
 
+router.use('/health', healthRouter);
+router.use('/config/credentials', credentialsRouter);
 router.use('/config/models', modelsRouter);
+router.use('/config/agents', agentsRouter);
+router.use('/config/projects', projectsRouter);
+router.use('/config/mcp', createMcpConfigRouter());
 
 export default router;
->>>>>>> origin/main

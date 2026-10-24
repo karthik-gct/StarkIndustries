@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useState } from 'react'
 import { useProjects, useCreateProject, useUpdateProject, useDeleteProject } from '../hooks/useProjects.js'
 import type { ProjectConfig, ProjectFormInput } from '../hooks/useProjects.js'
@@ -85,13 +84,4 @@ export function ProjectsPage() {
       )}
     </div>
   )
-=======
-export function ProjectsPage() {
-  return (
-    <div>
-      <h2 className="text-2xl font-semibold text-gray-900">Projects</h2>
-      <p className="mt-2 text-gray-500">Coming soon</p>
-    </div>
-  );
->>>>>>> origin/main
 }
