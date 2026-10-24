@@ -2,6 +2,27 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import yaml from 'js-yaml';
+<<<<<<< HEAD
+
+export class FileNotFoundError extends Error {
+  constructor(filePath: string) {
+    super(`File not found: ${filePath}`);
+    this.name = 'FileNotFoundError';
+  }
+}
+
+export class YamlParseError extends Error {
+  constructor(filePath: string, cause: unknown) {
+    super(`YAML parse error in ${filePath}: ${cause}`);
+    this.name = 'YamlParseError';
+  }
+}
+
+export class JsonParseError extends Error {
+  constructor(filePath: string, cause: unknown) {
+    super(`JSON parse error in ${filePath}: ${cause}`);
+    this.name = 'JsonParseError';
+=======
 import {
   BlockNotFoundError,
   FileNotFoundError,
@@ -22,11 +43,23 @@ async function fileExists(filePath: string): Promise<boolean> {
     return true;
   } catch {
     return false;
+>>>>>>> origin/main
   }
 }
 
 export async function writeAtomic(filePath: string, content: string): Promise<void> {
   const dir = path.dirname(filePath);
+<<<<<<< HEAD
+  const tmp = path.join(os.tmpdir(), `stark-${Date.now()}-${Math.random().toString(36).slice(2)}.tmp`);
+  await fs.writeFile(tmp, content, 'utf8');
+  try {
+    await fs.rename(tmp, filePath);
+  } catch (err: unknown) {
+    // EXDEV: cross-device rename (tmpdir on different fs)
+    if ((err as NodeJS.ErrnoException).code === 'EXDEV') {
+      await fs.copyFile(tmp, filePath);
+      await fs.unlink(tmp).catch(() => undefined);
+=======
   const base = path.basename(filePath);
   const tmp = path.join(os.tmpdir(), `${base}.tmp.${Date.now()}.${process.pid}`);
   await fs.mkdir(dir, { recursive: true });
@@ -38,11 +71,24 @@ export async function writeAtomic(filePath: string, content: string): Promise<vo
       // Cross-filesystem: fall back to copy+delete (best-effort atomicity)
       await fs.copyFile(tmp, filePath);
       await fs.unlink(tmp);
+>>>>>>> origin/main
     } else {
       await fs.unlink(tmp).catch(() => undefined);
       throw err;
     }
   }
+<<<<<<< HEAD
+  void dir; // suppress unused warning
+}
+
+export async function readYaml<T = unknown>(filePath: string): Promise<T> {
+  let raw: string;
+  try {
+    raw = await fs.readFile(filePath, 'utf8');
+  } catch {
+    throw new FileNotFoundError(filePath);
+  }
+=======
 }
 
 export async function readDotEnv(filePath: string): Promise<Record<string, string>> {
@@ -89,6 +135,7 @@ export async function writeDotEnv(
 export async function readYaml<T = unknown>(filePath: string): Promise<T> {
   if (!(await fileExists(filePath))) throw new FileNotFoundError(filePath);
   const raw = await fs.readFile(filePath, 'utf-8');
+>>>>>>> origin/main
   try {
     return yaml.load(raw) as T;
   } catch (err) {
@@ -97,13 +144,26 @@ export async function readYaml<T = unknown>(filePath: string): Promise<T> {
 }
 
 export async function writeYaml(filePath: string, data: unknown): Promise<void> {
+<<<<<<< HEAD
+  const content = yaml.dump(data, { lineWidth: 120 });
+=======
   const content = yaml.dump(data, { lineWidth: -1 });
+>>>>>>> origin/main
   await writeAtomic(filePath, content);
 }
 
 export async function readJson<T = unknown>(filePath: string): Promise<T> {
+<<<<<<< HEAD
+  let raw: string;
+  try {
+    raw = await fs.readFile(filePath, 'utf8');
+  } catch {
+    throw new FileNotFoundError(filePath);
+  }
+=======
   if (!(await fileExists(filePath))) throw new FileNotFoundError(filePath);
   const raw = await fs.readFile(filePath, 'utf-8');
+>>>>>>> origin/main
   try {
     return JSON.parse(raw) as T;
   } catch (err) {
@@ -111,6 +171,13 @@ export async function readJson<T = unknown>(filePath: string): Promise<T> {
   }
 }
 
+<<<<<<< HEAD
+export function maskSecret(value: string): string {
+  if (!value) return '';
+  if (value.length <= 4) return '•'.repeat(value.length);
+  return value.slice(0, 4) + '•'.repeat(value.length - 4);
+}
+=======
 export function maskSecret(value: string | undefined | null): string {
   if (value == null) return '';
   if (value.length === 0) return '';
@@ -181,3 +248,4 @@ export async function writeMarkdownYamlBlock(
 
   await writeAtomic(filePath, updated);
 }
+>>>>>>> origin/main
