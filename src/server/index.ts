@@ -1,13 +1,26 @@
 <<<<<<< HEAD
 import express from 'express'
-import { createApp } from './app.js'
+import projectsRouter from './routes/config/projects.js'
 
-const PORT = parseInt(process.env.PORT ?? '3100')
+export function createApp() {
+  const app = express()
+  app.use(express.json())
+
+  app.get('/api/health', (_req, res) => {
+    const { version } = JSON.parse(
+      require('node:fs').readFileSync(new URL('../../../package.json', import.meta.url), 'utf8')
+    )
+    res.json({ status: 'ok', version })
+  })
+
+  app.use('/api/config/projects', projectsRouter)
+
+  return app
+}
+
+const PORT = parseInt(process.env.PORT || '3101')
 const app = createApp()
-
-app.listen(PORT, () => {
-  console.log(`StarkIndustries settings server running on http://localhost:${PORT}`)
-})
+app.listen(PORT, () => console.log(`StarkIndustries API on :${PORT}`))
 =======
 import 'dotenv/config';
 import express from 'express';

@@ -1,8 +1,6 @@
 <<<<<<< HEAD
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-
-const PORT = parseInt(process.env.PORT ?? '3100')
 =======
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
@@ -14,25 +12,33 @@ const PORT = parseInt(process.env.PORT ?? '3100');
 export default defineConfig({
   plugins: [react()],
   server: {
+<<<<<<< HEAD
+    port: parseInt(process.env.PORT || '3100'),
+    proxy: {
+      '/api': {
+        target: `http://localhost:${parseInt(process.env.PORT || '3100') + 1}`,
+=======
     port: PORT + 1,
     proxy: {
-<<<<<<< HEAD
-      '/api': { target: `http://localhost:${PORT}`, changeOrigin: true }
-    }
-=======
       '/api': {
         target: `http://localhost:${PORT}`,
+>>>>>>> origin/main
         changeOrigin: true,
       },
     },
->>>>>>> origin/main
   },
   test: {
     globals: true,
     environment: 'jsdom',
 <<<<<<< HEAD
-    setupFiles: ['src/test-setup.ts']
-  }
+    setupFiles: ['./src/test-setup.ts'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json'],
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/test-setup.ts', 'src/client/main.tsx'],
+    },
+  },
 })
 =======
     setupFiles: ['./src/client/test-setup.ts'],
