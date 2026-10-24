@@ -6,6 +6,7 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "jsx": "react-jsx",
     "strict": true,
+<<<<<<< HEAD
     "esModuleInterop": true,
     "skipLibCheck": true,
     "outDir": "dist",
@@ -17,4 +18,28 @@
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
+=======
+<<<<<<< HEAD
+    "noUncheckedIndexedAccess": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "outDir": "dist/client",
+    "rootDir": "src/client",
+    "paths": {}
+  },
+  "include": ["src/client", "src/shared"]
+=======
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "outDir": "dist",
+    "rootDir": ".",
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  },
+  "include": ["src", "vite.config.ts"],
+  "exclude": ["node_modules", "dist"]
+>>>>>>> origin/main
+>>>>>>> origin/main
 }
