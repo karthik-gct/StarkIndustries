@@ -1,0 +1,43 @@
+{
+  "name": "starkindustries",
+  "version": "0.1.0",
+  "description": "Mark3 Settings Web Interface",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "node --watch src/server/index.ts",
+    "dev:client": "vite",
+    "build": "vite build",
+    "start": "node dist/server/index.js",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.0.0",
+    "express": "^5.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.6.8",
+    "@types/express": "^5.0.0",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@types/supertest": "^6.0.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "autoprefixer": "^10.0.0",
+    "concurrently": "^8.0.0",
+    "jsdom": "^29.1.1",
+    "postcss": "^8.0.0",
+    "supertest": "^6.0.0",
+    "tailwindcss": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^5.0.0",
+    "vitest": "^1.0.0"
+  }
+}
