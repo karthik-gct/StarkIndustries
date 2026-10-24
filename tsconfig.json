@@ -7,6 +7,19 @@
     "jsx": "react-jsx",
     "strict": true,
 <<<<<<< HEAD
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": ["src/shared/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+=======
+<<<<<<< HEAD
     "noUncheckedIndexedAccess": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -27,5 +40,6 @@
   },
   "include": ["src", "vite.config.ts"],
   "exclude": ["node_modules", "dist"]
+>>>>>>> origin/main
 >>>>>>> origin/main
 }
