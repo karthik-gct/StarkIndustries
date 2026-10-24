@@ -1,25 +1,14 @@
 <<<<<<< HEAD
-/**
- * Atomic config file I/O library (inline stub for SCRUM-8 branch).
- * Full implementation lives in SCRUM-7 (feature/SCRUM-7-file-io-library).
- * This stub will be superseded when SCRUM-7 is merged to main.
- */
-import * as fs from 'node:fs/promises'
-import * as os from 'node:os'
-import * as path from 'node:path'
+import { readFile, writeFile, rename, mkdir } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join, dirname } from 'node:path'
+import { randomBytes } from 'node:crypto'
+import yaml from 'js-yaml'
 
 export class FileNotFoundError extends Error {
-  constructor(filePath: string) {
-    super(`File not found: ${filePath}`)
+  constructor(path: string) {
+    super(`File not found: ${path}`)
     this.name = 'FileNotFoundError'
-  }
-}
-
-export class FileWriteError extends Error {
-  constructor(filePath: string, cause?: unknown) {
-    super(`Failed to write file: ${filePath}`)
-    this.name = 'FileWriteError'
-    this.cause = cause
 =======
 import fs from 'node:fs/promises';
 import os from 'node:os';
@@ -31,10 +20,16 @@ export class FileNotFoundError extends Error {
   constructor(filePath: string) {
     super(`File not found: ${filePath}`);
     this.name = 'FileNotFoundError';
+>>>>>>> origin/main
   }
 }
 
 export class YamlParseError extends Error {
+<<<<<<< HEAD
+  constructor(message: string) {
+    super(message)
+    this.name = 'YamlParseError'
+=======
   constructor(filePath: string, cause: unknown) {
     super(`YAML parse error in ${filePath}: ${cause}`);
     this.name = 'YamlParseError';
@@ -73,38 +68,30 @@ async function fileExists(filePath: string): Promise<boolean> {
 
 export async function writeAtomic(filePath: string, content: string): Promise<void> {
 <<<<<<< HEAD
-  const dir = path.dirname(filePath)
-  const tmp = path.join(os.tmpdir(), `stark-tmp-${Date.now()}-${Math.random().toString(36).slice(2)}`)
+  await mkdir(dirname(filePath), { recursive: true })
+  const tmp = join(tmpdir(), `stark-${randomBytes(8).toString('hex')}.tmp`)
   try {
-    await fs.mkdir(dir, { recursive: true })
-    await fs.writeFile(tmp, content, 'utf8')
-    await fs.rename(tmp, filePath)
+    await writeFile(tmp, content, 'utf8')
+    await rename(tmp, filePath)
   } catch (err) {
-    await fs.unlink(tmp).catch(() => {})
-    throw new FileWriteError(filePath, err)
+    // EXDEV: cross-device rename — fall back to copy+delete
+    const { copyFile, unlink } = await import('node:fs/promises')
+    await copyFile(tmp, filePath)
+    await unlink(tmp).catch(() => undefined)
   }
 }
 
-export async function readDotEnv(filePath: string): Promise<Record<string, string>> {
-  let content: string
+export async function readYaml<T = unknown>(filePath: string): Promise<T> {
+  let raw: string
   try {
-    content = await fs.readFile(filePath, 'utf8')
-  } catch (err: unknown) {
-    const nodeErr = err as NodeJS.ErrnoException
-    if (nodeErr.code === 'ENOENT') throw new FileNotFoundError(filePath)
-    throw err
+    raw = await readFile(filePath, 'utf8')
+  } catch {
+    throw new FileNotFoundError(filePath)
   }
-  const result: Record<string, string> = {}
-  for (const line of content.split('\n')) {
-    const trimmed = line.trim()
-    if (!trimmed || trimmed.startsWith('#')) continue
-    const eqIdx = trimmed.indexOf('=')
-    if (eqIdx === -1) continue
-    const key = trimmed.slice(0, eqIdx).trim()
-    const value = trimmed.slice(eqIdx + 1).trim()
-    if (key) result[key] = value
-  }
-  return result
+  try {
+    return yaml.load(raw) as T
+  } catch (err) {
+    throw new YamlParseError(String(err))
 =======
   const dir = path.dirname(filePath);
 <<<<<<< HEAD
@@ -168,31 +155,10 @@ export async function readDotEnv(filePath: string): Promise<Record<string, strin
     if (key) result[key] = value;
   }
   return result;
->>>>>>> origin/main
 }
 
 export async function writeDotEnv(
   filePath: string,
-<<<<<<< HEAD
-  values: Record<string, string>
-): Promise<void> {
-  let existing: Record<string, string> = {}
-  try {
-    existing = await readDotEnv(filePath)
-  } catch (err) {
-    if (!(err instanceof FileNotFoundError)) throw err
-  }
-  const merged = { ...existing, ...values }
-  const lines = Object.entries(merged).map(([k, v]) => `${k}=${v}`)
-  await writeAtomic(filePath, lines.join('\n') + '\n')
-}
-
-export function maskSecret(value: string): string {
-  if (!value) return ''
-  if (value.length <= 4) return '•'.repeat(value.length)
-  return value.slice(0, 4) + '•'.repeat(value.length - 4)
-}
-=======
   values: Record<string, string>,
 ): Promise<void> {
   let existing: Record<string, string> = {};
@@ -219,10 +185,22 @@ export async function readYaml<T = unknown>(filePath: string): Promise<T> {
     return yaml.load(raw) as T;
   } catch (err) {
     throw new YamlParseError(filePath, err);
+>>>>>>> origin/main
   }
 }
 
 export async function writeYaml(filePath: string, data: unknown): Promise<void> {
+<<<<<<< HEAD
+  const content = yaml.dump(data, { lineWidth: 120, noRefs: true })
+  await writeAtomic(filePath, content)
+}
+
+export function maskSecret(value: string): string {
+  if (!value) return ''
+  if (value.length <= 4) return '•'.repeat(value.length)
+  return value.slice(0, 4) + '•'.repeat(value.length - 4)
+}
+=======
 <<<<<<< HEAD
   const content = yaml.dump(data, { lineWidth: 120 });
 =======
