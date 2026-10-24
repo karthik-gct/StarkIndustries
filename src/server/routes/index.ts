@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Router } from 'express'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -14,3 +15,13 @@ apiRouter.get('/health', (_req, res) => {
 })
 
 apiRouter.use('/config/mcp', mcpConfigRouter)
+=======
+import { Router } from 'express';
+import modelsRouter from './config/models.js';
+
+const router = Router();
+
+router.use('/config/models', modelsRouter);
+
+export default router;
+>>>>>>> origin/main
